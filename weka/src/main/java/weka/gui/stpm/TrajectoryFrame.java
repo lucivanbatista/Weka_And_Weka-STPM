@@ -285,6 +285,9 @@ public class TrajectoryFrame extends JDialog{
         InterceptsG streets = null;
         
         Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        
+//        Statement s = conn.createStatement();
+        
         // selects the trajectory-tid to be processed
         String sql = "SELECT "+config.tid+" as tid, count(*) FROM "+config.table+" GROUP BY "+config.tid+" ORDER BY tid DESC";
         ResultSet rs = s.executeQuery(sql);
@@ -385,6 +388,7 @@ public class TrajectoryFrame extends JDialog{
 
         List<Trajectory> trajectorys = new ArrayList<Trajectory>();
         Statement s = config.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+//        Statement s = config.conn.createStatement(); 
         // selects the trajectory-tid to be processed
         String sql = "SELECT "+config.tid+" as tid, count(*) FROM "+tableTraj+" GROUP BY "+config.tid+" ORDER BY tid DESC";
         ResultSet rs = s.executeQuery(sql);
@@ -465,15 +469,16 @@ public class TrajectoryFrame extends JDialog{
                 ") WITHOUT OIDS;"    
             );            
               s.execute("SELECT AddGeometryColumn('"+TrajectoryFrame.getCurrentNameTableStop()+"', 'the_geom',"+table_srid+", 'MULTIPOLYGON', 2)");
-            try {
-                s.execute("ALTER TABLE "+TrajectoryFrame.getCurrentNameTableStop()+" DROP CONSTRAINT enforce_geotype_the_geom");
-            } catch (SQLException ex) {
-                try {
-                    s.execute("ALTER TABLE "+TrajectoryFrame.getCurrentNameTableStop()+" DROP CONSTRAINT \"$2\"");
-                }catch (SQLException e) {
-                    ex.printStackTrace();
-                }
-            }            
+//            try {
+//                s.execute("ALTER TABLE "+TrajectoryFrame.getCurrentNameTableStop()+" DROP CONSTRAINT enforce_geotype_the_geom");
+//            } catch (SQLException ex) {
+//            	ex.printStackTrace();
+//                try {
+//                    //s.execute("ALTER TABLE "+TrajectoryFrame.getCurrentNameTableStop()+" DROP CONSTRAINT \"$2\"");
+//                }catch (SQLException e) {
+//                    ex.printStackTrace();
+//                }
+//            }            
         }
 
         //MOVES table (NOT USED YET)
@@ -498,15 +503,15 @@ public class TrajectoryFrame extends JDialog{
                 ")WITHOUT OIDS"
             );
             s.execute("SELECT AddGeometryColumn('moves', 'the_geom',"+table_srid+", 'LINESTRING', 2)");
-            try {
-                s.execute("ALTER TABLE moves DROP CONSTRAINT enforce_geotype_the_geom");
-            } catch (SQLException ex) {
-                try {
-                    s.execute("ALTER TABLE moves DROP CONSTRAINT \"$2\"");
-                }catch (SQLException e) {
-                    ex.printStackTrace();
-                }
-            }            
+//            try {
+//                s.execute("ALTER TABLE moves DROP CONSTRAINT enforce_geotype_the_geom");
+//            } catch (SQLException ex) {
+//                try {
+//                    s.execute("ALTER TABLE moves DROP CONSTRAINT \"$2\"");
+//                }catch (SQLException e) {
+//                    ex.printStackTrace();
+//                }
+//            }            
         }
         
         /*Apply buffer geometry to RFs.  */
@@ -611,11 +616,13 @@ private InterceptsG createIntercepts() throws SQLException{
             tempo2 = new java.util.Date(fim2.getTime()-ini2.getTime());
             System.out.println("\t\t"+a.name+" time: " +tempo2.getTime()+" ms");
             // then, save the registers from the query in an adequate struct 
-                             
-            while(Intercep.next()){            	
+            System.out.println("Let's go");
+            int count = 0;
+            while(Intercep.next()){
+            	System.out.println("Entrei " + count);
             	Interc i = new Interc (Intercep.getInt("pt"), Intercep.getInt("gid"), Intercep.getString("rf"),a.value.intValue());
             	intercs.addpt(i);
-            	
+            	count++;
             }                
         }
         
