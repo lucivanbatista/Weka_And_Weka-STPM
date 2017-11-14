@@ -296,7 +296,6 @@ public class TrajectoryFrame extends JDialog{
     	i = createIntercepts();
     	System.out.println("Interceptions created ");
 
-
         File speedFile = null;
         if(TrajectoryClean.isPrintSpeedToFileXls()){
             speedFile = Util.getFileSpeed(TrajectoryFrame.getCurrentNameTableStop());
@@ -617,12 +616,9 @@ private InterceptsG createIntercepts() throws SQLException{
             System.out.println("\t\t"+a.name+" time: " +tempo2.getTime()+" ms");
             // then, save the registers from the query in an adequate struct 
             System.out.println("Let's go");
-            int count = 0;
             while(Intercep.next()){
-            	System.out.println("Entrei " + count);
             	Interc i = new Interc (Intercep.getInt("pt"), Intercep.getInt("gid"), Intercep.getString("rf"),a.value.intValue());
             	intercs.addpt(i);
-            	count++;
             }                
         }
         
